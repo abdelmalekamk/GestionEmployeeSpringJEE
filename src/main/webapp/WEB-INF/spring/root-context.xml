@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+<!-- Database access configuration -->
+	<bean id="entityManagerFactoryBean" name="entityManagerFactoryBean" 
+	class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.training.spring.domain" />
+		<property name="persistenceProvider">
+	      <bean class="org.hibernate.jpa.HibernatePersistenceProvider" />
+	   </property>	
+<property name="jpaProperties">
+         <props>
+            <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+            <prop key="hiberate.show_sql">true</prop>
+         </props>
+      </property>
+	</bean>
+			
+	<bean id="dataSource" name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="org.postgresql.Driver"/>
+	    <property name="url" value="jdbc:postgresql://localhost:5432/spring"/>
+	    <property name="username" value="postgres"/>
+	    <property name="password" value="postsql"/>
+	</bean>
+	<bean id="transactionManager" name="transactionManager" 
+	class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactoryBean"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>	
+	<context:component-scan base-package="com.training.spring.service" />
+	<context:component-scan base-package="com.training.spring.dao" />
+</beans>
+	   
